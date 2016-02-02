@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Shuffler Export</title>
+  <meta name="description" content="Export your Shuffler Favorites">
+  <meta name="author" content="@RoelandP">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+      <div class="header clearfix">
+        <nav>
+        </nav>
+        <h3 class="text-muted">Shuffler Favorites Exporter</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Shuffler.FM Favorites Export</h1>
+        <p class="lead">Unfortunately Shuffler is shutting down, putting all it's efforts into Pause</p>
+        <p>If you want to take out your favorites from the service, hit the button below!</p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-12">
+          <h3>Fill in your Shuffler id</h3>
+          <p><input type="text" id="shufflerid" value="7208"></p>
+
+          <h4>Subheading</h4>
+          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+          <h4>Subheading</h4>
+          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>Subheading</h4>
+          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+          <h4>Subheading</h4>
+          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+          <h4>Subheading</h4>
+          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Made with love by <a href="http://twitter.com/roelandp">@RoelandP</a>, known for <a href="http://dull.rocks">Dull</a>, <a href="http://shoudio.com">Shoudio</a> and <a href="http://talesandtours.com">Tales &amp; Tours</a></p>
+      </footer>
+
+    </div> <!-- /container -->
+    
+  <script type="text/javascript">
+	  
+  	var faves = [];
+	  	
+	  function getFaves(id){
+		  
+		  $.ajax({
+		  dataType: "jsonp",
+		  	url: "//shuffler.fm/activity_streams/favorites:"+id+".json?",
+		  	data: "page=1&per_page=10",
+		  	success: function(data) {
+			  	
+
+			  	
+			  	for(var i = 0; i< data.length; i++) {
+				  	
+			  		console.log(data[i].activities.object);
+			  		var tobuild = [];
+			  		
+			  		tobuild.id = data[i].object.id;
+			  		tobuild.artist = data[i].object.artist;
+			  		tobuild.title = data[i].object.title;
+			  		tobuild.post = data[i].object.permalink;
+			  		tobuild.audiosource = data[i].object.source;
+			  		tobuild.audiosourcelink = data[i].object.source_link;
+			  		tobuild.deezer = data[i].object.deezer_id;
+			  		tobuild.spotify = data[i].object.spotify_href;				  
+			  		tobuild.artistmusicbrainz = data[i].object.artist_mbid;
+			  		
+			  		faves.push(tobuild);
+			  		console.log(faves);
+			  	}
+			  	
+			  	
+
+		  	}
+		});
+		  
+	  }
+  </script>
+</body>
+</html>
