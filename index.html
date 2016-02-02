@@ -11,6 +11,8 @@
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <!-- Latest compiled and minified CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
 <!-- Optional theme -->
@@ -18,46 +20,130 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+	
+	var saveAs=saveAs||function(view){"use strict";if(typeof navigator!=="undefined"&&/MSIE [1-9]\./.test(navigator.userAgent)){return}var doc=view.document,get_URL=function(){return view.URL||view.webkitURL||view},save_link=doc.createElementNS("http://www.w3.org/1999/xhtml","a"),can_use_save_link="download"in save_link,click=function(node){var event=new MouseEvent("click");node.dispatchEvent(event)},is_safari=/Version\/[\d\.]+.*Safari/.test(navigator.userAgent),webkit_req_fs=view.webkitRequestFileSystem,req_fs=view.requestFileSystem||webkit_req_fs||view.mozRequestFileSystem,throw_outside=function(ex){(view.setImmediate||view.setTimeout)(function(){throw ex},0)},force_saveable_type="application/octet-stream",fs_min_size=0,arbitrary_revoke_timeout=500,revoke=function(file){var revoker=function(){if(typeof file==="string"){get_URL().revokeObjectURL(file)}else{file.remove()}};if(view.chrome){revoker()}else{setTimeout(revoker,arbitrary_revoke_timeout)}},dispatch=function(filesaver,event_types,event){event_types=[].concat(event_types);var i=event_types.length;while(i--){var listener=filesaver["on"+event_types[i]];if(typeof listener==="function"){try{listener.call(filesaver,event||filesaver)}catch(ex){throw_outside(ex)}}}},auto_bom=function(blob){if(/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)){return new Blob(["\ufeff",blob],{type:blob.type})}return blob},FileSaver=function(blob,name,no_auto_bom){if(!no_auto_bom){blob=auto_bom(blob)}var filesaver=this,type=blob.type,blob_changed=false,object_url,target_view,dispatch_all=function(){dispatch(filesaver,"writestart progress write writeend".split(" "))},fs_error=function(){if(target_view&&is_safari&&typeof FileReader!=="undefined"){var reader=new FileReader;reader.onloadend=function(){var base64Data=reader.result;target_view.location.href="data:attachment/file"+base64Data.slice(base64Data.search(/[,;]/));filesaver.readyState=filesaver.DONE;dispatch_all()};reader.readAsDataURL(blob);filesaver.readyState=filesaver.INIT;return}if(blob_changed||!object_url){object_url=get_URL().createObjectURL(blob)}if(target_view){target_view.location.href=object_url}else{var new_tab=view.open(object_url,"_blank");if(new_tab==undefined&&is_safari){view.location.href=object_url}}filesaver.readyState=filesaver.DONE;dispatch_all();revoke(object_url)},abortable=function(func){return function(){if(filesaver.readyState!==filesaver.DONE){return func.apply(this,arguments)}}},create_if_not_found={create:true,exclusive:false},slice;filesaver.readyState=filesaver.INIT;if(!name){name="download"}if(can_use_save_link){object_url=get_URL().createObjectURL(blob);setTimeout(function(){save_link.href=object_url;save_link.download=name;click(save_link);dispatch_all();revoke(object_url);filesaver.readyState=filesaver.DONE});return}if(view.chrome&&type&&type!==force_saveable_type){slice=blob.slice||blob.webkitSlice;blob=slice.call(blob,0,blob.size,force_saveable_type);blob_changed=true}if(webkit_req_fs&&name!=="download"){name+=".download"}if(type===force_saveable_type||webkit_req_fs){target_view=view}if(!req_fs){fs_error();return}fs_min_size+=blob.size;req_fs(view.TEMPORARY,fs_min_size,abortable(function(fs){fs.root.getDirectory("saved",create_if_not_found,abortable(function(dir){var save=function(){dir.getFile(name,create_if_not_found,abortable(function(file){file.createWriter(abortable(function(writer){writer.onwriteend=function(event){target_view.location.href=file.toURL();filesaver.readyState=filesaver.DONE;dispatch(filesaver,"writeend",event);revoke(file)};writer.onerror=function(){var error=writer.error;if(error.code!==error.ABORT_ERR){fs_error()}};"writestart progress write abort".split(" ").forEach(function(event){writer["on"+event]=filesaver["on"+event]});writer.write(blob);filesaver.abort=function(){writer.abort();filesaver.readyState=filesaver.DONE};filesaver.readyState=filesaver.WRITING}),fs_error)}),fs_error)};dir.getFile(name,{create:false},abortable(function(file){file.remove();save()}),abortable(function(ex){if(ex.code===ex.NOT_FOUND_ERR){save()}else{fs_error()}}))}),fs_error)}),fs_error)},FS_proto=FileSaver.prototype,saveAs=function(blob,name,no_auto_bom){return new FileSaver(blob,name,no_auto_bom)};if(typeof navigator!=="undefined"&&navigator.msSaveOrOpenBlob){return function(blob,name,no_auto_bom){if(!no_auto_bom){blob=auto_bom(blob)}return navigator.msSaveOrOpenBlob(blob,name||"download")}}FS_proto.abort=function(){var filesaver=this;filesaver.readyState=filesaver.DONE;dispatch(filesaver,"abort")};FS_proto.readyState=FS_proto.INIT=0;FS_proto.WRITING=1;FS_proto.DONE=2;FS_proto.error=FS_proto.onwritestart=FS_proto.onprogress=FS_proto.onwrite=FS_proto.onabort=FS_proto.onerror=FS_proto.onwriteend=null;return saveAs}(typeof self!=="undefined"&&self||typeof window!=="undefined"&&window||this.content);if(typeof module!=="undefined"&&module.exports){module.exports.saveAs=saveAs}else if(typeof define!=="undefined"&&define!==null&&define.amd!=null){define([],function(){return saveAs})};
+	
+	/**
+* Converts a value to a string appropriate for entry into a CSV table.  E.g., a string value will be surrounded by quotes.
+* @param {string|number|object} theValue
+* @param {string} sDelimiter The string delimiter.  Defaults to a double quote (") if omitted.
+*/
+function toCsvValue(theValue, sDelimiter) {
+	var t = typeof (theValue), output;
+
+	if (typeof (sDelimiter) === "undefined" || sDelimiter === null) {
+		sDelimiter = '"';
+	}
+
+	if (t === "undefined" || t === null) {
+		output = "";
+	} else if (t === "string") {
+		output = sDelimiter + theValue + sDelimiter;
+	} else {
+		output = String(theValue);
+	}
+
+	return output;
+}
+
+/**
+* Converts an array of objects (with identical schemas) into a CSV table.
+* @param {Array} objArray An array of objects.  Each object in the array must have the same property list.
+* @param {string} sDelimiter The string delimiter.  Defaults to a double quote (") if omitted.
+* @param {string} cDelimiter The column delimiter.  Defaults to a comma (,) if omitted.
+* @return {string} The CSV equivalent of objArray.
+*/
+function toCsv(objArray, sDelimiter, cDelimiter) {
+	var i, l, names = [], name, value, obj, row, output = "", n, nl;
+
+	// Initialize default parameters.
+	if (typeof (sDelimiter) === "undefined" || sDelimiter === null) {
+		sDelimiter = '"';
+	}
+	if (typeof (cDelimiter) === "undefined" || cDelimiter === null) {
+		cDelimiter = ",";
+	}
+
+	for (i = 0, l = objArray.length; i < l; i += 1) {
+		// Get the names of the properties.
+		obj = objArray[i];
+		row = "";
+		if (i === 0) {
+			// Loop through the names
+			for (name in obj) {
+				if (obj.hasOwnProperty(name)) {
+					names.push(name);
+					row += [sDelimiter, name, sDelimiter, cDelimiter].join("");
+				}
+			}
+			row = row.substring(0, row.length - 1);
+			output += row;
+		}
+
+		output += "\n";
+		row = "";
+		for (n = 0, nl = names.length; n < nl; n += 1) {
+			name = names[n];
+			value = obj[name];
+			if (n > 0) {
+				row += ","
+			}
+			row += toCsvValue(value, '"');
+		}
+		output += row;
+	}
+
+	return output;
+}
+	
+</script>
 </head>
 
 <body>
 	<div class="container">
-      <div class="header clearfix">
-        <nav>
-        </nav>
-        <h3 class="text-muted">Shuffler Favorites Exporter</h3>
-      </div>
 
-      <div class="jumbotron">
+      <div class="jumbotron text-center">
         <h1>Shuffler.FM Favorites Export</h1>
-        <p class="lead">Unfortunately Shuffler is shutting down, putting all it's efforts into Pause</p>
-        <p>If you want to take out your favorites from the service, hit the button below!</p>
+        <p class="lead">If you want to take out your favorites from the service, fill in your shuffler id and hit the button below!</p>
+        
+
+<div class="row">
+	<input class="form-control input-lg text-center" type="text"  id="shufflerid" name="shufflerid" placeholder="Your Shuffler #ID" onkeyup="checkEmptyIdField()" onblur="checkEmptyIdField()"/>
+</div>
+    
+<div class="row text-center">
+<p></p>
+		  <button type="button" id="retrieveid" class="btn btn-lg btn-primary" onclick="getPage(1);">Retrieve Favorites</button>
+
+	</div>
       </div>
-
-      <div class="row marketing">
-        <div class="col-lg-12">
-          <h3>Fill in your Shuffler id</h3>
-          <p><input type="text" id="shufflerid" value="7208"></p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+	 
+	  
+     <div class="row" id="options" style="display:none;">
+        <div class="col-md-4">
+          <h2>Full Dataset</h2>
+          <p>Get a full dataset with track info, postlinks, audio links etc. Simply import the CSV in a spreadsheet program of your choice.</p>
+          <p><button type="button" id="getcsv" class="btn btn-lg btn-default" onclick="getCsv();">Get CSV file</button></p>
         </div>
-
-        <div class="col-lg-6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        <div class="col-md-4">
+          <h2>Spotify tracklist</h2>
+          <p>Just open the rendered .txt file and copy - paste all spotify uri's into a new playlist in the Spotify desktop app.</p>
+          <p><button type="button" id="getspotify" class="btn btn-lg btn-default" onclick="getSpotify();">Get Spotify Tracks</button></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Deezer tracklist</h2>
+          <p>A .txt file containing a list with links to Deezer tracks.</p>
+          <p><button type="button" id="getcsv" class="btn btn-lg btn-default" onclick="getDeezer();">Get Deezer Tracks</button></p>
         </div>
       </div>
+      
+      	
+	  			
+	  			  
+	  			<hr>  
+      	 	
+
 
       <footer class="footer">
         <p>Made with love by <a href="http://twitter.com/roelandp">@RoelandP</a>, known for <a href="http://dull.rocks">Dull</a>, <a href="http://shoudio.com">Shoudio</a> and <a href="http://talesandtours.com">Tales &amp; Tours</a></p>
@@ -68,42 +154,177 @@
   <script type="text/javascript">
 	  
   	var faves = [];
+  	var shufflerid = 0;
+  	
+  	var filename, filecontent;
+  	var page = 1;
 	  	
 	  function getFaves(id){
 		  
+		  shufflerid = id;
 		  $.ajax({
 		  dataType: "jsonp",
-		  	url: "//shuffler.fm/activity_streams/favorites:"+id+".json?",
-		  	data: "page=1&per_page=10",
+		  	url: "https://shuffler.fm/activity_streams/favorites:"+id+".json?",
+		  	data: "page="+page+"&per_page=100",
 		  	success: function(data) {
 			  	
 
 			  	
-			  	for(var i = 0; i< data.length; i++) {
+			  	for(var i = 0; i < data.length; i++) {
 				  	
-			  		console.log(data[i].activities.object);
+			  		//console.log(data[i].activities[0].object.id);
 			  		var tobuild = [];
 			  		
-			  		tobuild.id = data[i].object.id;
-			  		tobuild.artist = data[i].object.artist;
-			  		tobuild.title = data[i].object.title;
-			  		tobuild.post = data[i].object.permalink;
-			  		tobuild.audiosource = data[i].object.source;
-			  		tobuild.audiosourcelink = data[i].object.source_link;
-			  		tobuild.deezer = data[i].object.deezer_id;
-			  		tobuild.spotify = data[i].object.spotify_href;				  
-			  		tobuild.artistmusicbrainz = data[i].object.artist_mbid;
+			  		if(data[i]) {
 			  		
-			  		faves.push(tobuild);
-			  		console.log(faves);
+			  			if(data[i].hasOwnProperty('activities')) { 
+				  			try {
+					  		tobuild.id = data[i].activities[0].object.id;
+					  		tobuild.artist = data[i].activities[0].object.artist;
+					  		tobuild.title = data[i].activities[0].object.title;
+					  		tobuild.post = data[i].activities[0].object.permalink;
+					  		tobuild.audiosource = data[i].activities[0].object.source;
+					  		tobuild.audiosourcelink = data[i].activities[0].object.source_link;
+					  		tobuild.deezer = data[i].activities[0].object.deezer_id;
+					  		tobuild.spotify = data[i].activities[0].object.spotify_href;				  
+					  		tobuild.artistmusicbrainz = data[i].activities[0].object.artist_mbid;
+					  		
+					  		faves.push(tobuild);
+					  		} catch (err) {
+						  		
+						  		//console.log(err);
+						  		//console.log('i = '+i);
+						  		
+					  		}
+				  		}
+			  		
+			  		}
+			  		
 			  	}
 			  	
+			  	//console.log(faves);
 			  	
+			  	if(data.length >= 100) {
+				  	
+				  	page++;
+				  	getPage(page);
+				  	
+			  	} else {
+				  	
+				  	//console.log('done');
+				  	
+			  		$('#retrieveid').slideUp();
+			  		
+			  		$('#options').slideDown();
+			  	}
+			  	
+
 
 		  	}
 		});
 		  
 	  }
+	  
+	  function getPage(page) {
+		  
+		  $('#retrieveid').attr('disabled','disabled');
+		  
+		  $('#retrieveid').html('Retrieving page '+page);
+		  
+		  getFaves($('#shufflerid').val());
+		  
+	  }
+	  
+	  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+function getCsv() {
+	filename = 'my_shuffler_data_'+shufflerid+'.csv';
+	filecontent = toCsv(faves);
+	
+	
+	makeFile();
+}
+
+function getSpotify() {
+	filename = 'my_shuffler_data_spotify_'+shufflerid+'.txt';
+	
+	filecontent = '';
+	
+	for(var i = 0; i < faves.length; i++) {
+		if(faves[i].spotify != null) {
+			
+			filecontent += faves[i].spotify+"\n";
+			
+		}
+	}
+	
+	makeFile();	
+}
+
+function getDeezer() {
+	filename = 'my_shuffler_data_deezer_'+shufflerid+'.txt';
+	filecontent = '';
+	
+	for(var i = 0; i < faves.length; i++) {
+		if(faves[i].deezer != null) {
+			
+			filecontent += "https://www.deezer.com/track/"+faves[i].deezer+"\n";
+			
+		}
+	}
+	
+	makeFile();
+}
+
+
+function makeFile() {
+
+var blob = new Blob([filecontent], {type: "text/plain;charset=utf-8"});
+saveAs(blob, filename);
+
+}    
+                
+
+
+
+function checkEmptyIdField() {
+	
+	if($('#shufflerid').val().length == 0) {
+		
+		$('#retrieveid').attr('disabled','disabled');
+	} else {
+		
+		$('#retrieveid').removeAttr('disabled');
+	}
+	
+	
+}
+
+$( document ).ready(function() {
+	
+    var id = (getUrlParameter('id'));
+    if(id != undefined) {
+	    
+	    $('#shufflerid').val(id);
+    }
+    
+    checkEmptyIdField();
+});
+	  
+	  //
   </script>
 </body>
 </html>
