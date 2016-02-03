@@ -98,13 +98,20 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 }
 	
 </script>
+<style type="text/css">
+	.container {
+		
+		max-width: 900px;
+		
+	}
+	</style>
 </head>
 
 <body>
 	<div class="container">
 
       <div class="jumbotron text-center">
-        <h1>Shuffler.FM Favorites Export</h1>
+        <h1>Shuffler.fm Favorites Export</h1>
         <p class="lead">If you want to take out your favorites from the service, fill in your shuffler id and hit the button below!</p>
         
 
@@ -113,16 +120,18 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 </div>
     
 <div class="row text-center">
-<p></p>
-		  <button type="button" id="retrieveid" class="btn btn-lg btn-primary" onclick="getPage(1);">Retrieve Favorites</button>
-
+<br />
+<button type="button" id="retrieveid" class="btn btn-lg btn-primary" onclick="getPage(1);">Retrieve Favorites</button><br /><br />
+		  <small id="recordslist">
+		  </small>
+		
 	</div>
       </div>
 	 
 	  
      <div class="row" id="options" style="display:none;">
         <div class="col-md-4">
-          <h2>Full Dataset</h2>
+          <h2>Full Dataset <small id="amountrecords"></small></h2>
           <p>Get a full dataset with track info, postlinks, audio links etc. Simply import the CSV in a spreadsheet program of your choice.</p>
           <p><button type="button" id="getcsv" class="btn btn-lg btn-default" onclick="getCsv();">Get CSV file</button></p>
         </div>
@@ -158,8 +167,34 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
   	
   	var filename, filecontent;
   	var page = 1;
+  	
+  	var records = 0;
+  	
+  	var recordshown = 0;
+  	
+  	var myVar;
+  	
+  	var rl = document.getElementById("recordslist");
+  	function myLooper() {
+	  	
+	  	
+  		try {
+	  		if(faves[recordshown]!= undefined) {
+		  		if(faves[recordshown].artist != '' && faves[recordshown].artist != null) {
+					rl.innerHTML = faves[recordshown].artist;
+				}
+				recordshown++;
+			}
+		} catch(err) {
+			
+			
+		}
+	}
+
 	  	
 	  function getFaves(id){
+		  
+		  myVar = setInterval(function(){ myLooper() }, 300);
 		  
 		  shufflerid = id;
 		  $.ajax({
@@ -168,7 +203,8 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 		  	data: "page="+page+"&per_page=100",
 		  	success: function(data) {
 			  	
-
+		  		
+		  		var rcrd = $('#recordslist');
 			  	
 			  	for(var i = 0; i < data.length; i++) {
 				  	
@@ -190,6 +226,11 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 					  		tobuild.artistmusicbrainz = data[i].activities[0].object.artist_mbid;
 					  		
 					  		faves.push(tobuild);
+					  		records++;
+
+					  			
+
+					  					  		
 					  		} catch (err) {
 						  		
 						  		//console.log(err);
@@ -212,10 +253,13 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 			  	} else {
 				  	
 				  	//console.log('done');
+				  	clearInterval(myVar);
+				  	myVar = null;
 				  	
-			  		$('#retrieveid').slideUp();
-			  		
+			  		$('#retrieveid').slideUp(function(){$(this).hide();});
+			  		$('#recordslist').slideUp(function(){$(this).hide();});
 			  		$('#options').slideDown();
+			  		$('#amountrecords').html('('+records+' faves)');
 			  	}
 			  	
 
@@ -225,7 +269,7 @@ function toCsv(objArray, sDelimiter, cDelimiter) {
 		  
 	  }
 	  
-	  function getPage(page) {
+	 function getPage(page) {
 		  
 		  $('#retrieveid').attr('disabled','disabled');
 		  
